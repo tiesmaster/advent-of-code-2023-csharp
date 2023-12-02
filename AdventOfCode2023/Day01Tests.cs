@@ -1,3 +1,7 @@
+using System;
+
+using Xunit;
+
 namespace AdventOfCode2023;
 
 public class Day01Tests
@@ -30,21 +34,34 @@ public class Day01Tests
 
     private static IEnumerable<int> ParseCalibrationValuesWithImprovedParsing(string input)
     {
-        throw new NotImplementedException();
         var lines = input.Split(Environment.NewLine);
 
         foreach (var line in lines)
         {
-            for (var i = 0; i < line.Length; i++)
+            var digitChars = Tokenize(line);
+
+            var d1 = digitChars.First();
+            var d2 = digitChars.Last();
+
+            yield return (10 * d1) + d2;
+        }
+
+        static IEnumerable<int> Tokenize(string s)
+        {
+            for (var i = 0; i < s.Length; i++)
             {
+                var c = s[i];
+                if (char.IsDigit(c))
+                {
+                    yield return c;
+                }
+                else if (true)
+                {
 
-                
+
+                }
+
             }
-
-            //var s = digitChars.First();
-            //var e = digitChars.Last();
-
-            //yield return int.Parse(s.ToString() + e.ToString());
         }
     }
 
@@ -61,6 +78,21 @@ public class Day01Tests
         var result = Day01Part1(input);
 
         result.Should().Be(142);
+    }
+
+    [Fact]
+    public void Part1TestParsedValues()
+    {
+        var input = """
+            1abc2
+            pqr3stu8vwx
+            a1b2c3d4e5f
+            treb7uchet
+            """;
+
+        var result = ParseCalibrationValues(input);
+
+        result.Should().BeEquivalentTo([12, 38, 15, 77]);
     }
 
     [Fact]
@@ -106,7 +138,7 @@ public class Day01Tests
 
         var result = ParseCalibrationValuesWithImprovedParsing(input);
 
-        result.Should().BeEquivalentTo([1, 2]);
+        result.Should().BeEquivalentTo([29, 83, 13, 24, 42, 14, 76]);
     }
 
     [Fact]

@@ -1,3 +1,7 @@
+using System;
+
+using Xunit;
+
 namespace AdventOfCode2023;
 
 public class SanityCheckTests
@@ -14,5 +18,15 @@ public class SanityCheckTests
     {
         yield return 1;
         yield return 3;
+    }
+
+    [Fact]
+    public void CheckCharToIntConversion()
+    {
+        var c = '1';
+
+        var i = c - '0';
+
+        i.Should().Be(1);
     }
 }
