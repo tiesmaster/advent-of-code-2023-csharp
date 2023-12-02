@@ -10,7 +10,7 @@ public class Day02Tests
     {
         var gameListing = GameListing.Parse(input);
 
-        var games = gameListing.PossibleGames(12, 13, 14);
+        var games = gameListing.PossibleGames(new Cubes(12, 13, 14));
         return games.Sum(x => x.Id);
     }
 

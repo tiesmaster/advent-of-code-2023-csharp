@@ -8,27 +8,29 @@ public record GameListing(ImmutableList<Game> Games)
         return parser.Parse();
     }
 
-    public IEnumerable<Game> PossibleGames(int r, int g, int b)
+    public IEnumerable<Game> PossibleGames(Cubes givenCubes)
     {
-        return Games.Where(x => x.IsPossible(r, g, b));
+        return Games.Where(g => g.IsPossible(givenCubes));
     }
 }
 
 public record Game(int Id, ImmutableList<GamePlay> Set)
 {
-    internal bool IsPossible(int r, int g, int b)
+    internal bool IsPossible(Cubes givenCubes)
     {
-        return Set.All(x => x.IsPossible(r, g, b));
+        return Set.All(p => p.IsPossible(givenCubes));
     }
 }
 
-public record GamePlay(int R, int G, int B)
+public record GamePlay(Cubes PlayedCubes)
 {
-    public bool IsPossible(int r, int g, int b)
+    public bool IsPossible(Cubes givenCubes)
     {
-        return r >= R && g >= G && b >= B;
+        return givenCubes.R >= PlayedCubes.R && givenCubes.G >= PlayedCubes.G && givenCubes.B >= PlayedCubes.B;
     }
 }
+
+public record Cubes(int R, int G, int B);
 
 public class GameListingParser(string input)
 {
@@ -88,7 +90,7 @@ public class GameListingParser(string input)
             }
         }
 
-        return new(r, g, b);
+        return new(new(r, g, b));
     }
 
     private static int ParseNumber(string s)
