@@ -1,10 +1,17 @@
+using System;
+
+using Xunit;
+
 namespace AdventOfCode2023;
 
 public class Day02Tests
 {
-    private int Day01Part1(string input)
+    private static int Day01Part1(string input)
     {
-        throw new NotImplementedException();
+        var gameListing = GameListing.Parse(input);
+
+        var games = gameListing.PossibleGames(12, 13, 14);
+        return games.Sum(x => x.Id);
     }
 
     [Fact]
@@ -28,9 +35,27 @@ public class Day02Tests
     {
         var input = RealDealValue;
 
-        int result = Day01Part1(input);
+        var result = Day01Part1(input);
 
-        result.Should().Be(666);
+        result.Should().Be(2101);
+    }
+
+    [Fact]
+    public void GameIdParsing()
+    {
+        var gameText = "Game 12";
+
+        var id = int.Parse(gameText[5..]);
+
+        id.Should().Be(12);
+    }
+
+    [Fact]
+    public void GameSetParsing()
+    {
+        var text = "3 blue";
+        var i = int.Parse(text[..text.IndexOf(' ')]);
+        i.Should().Be(3);
     }
 
     private static string RealDealValue => """
