@@ -1,8 +1,10 @@
-using System;
-
-using Xunit;
-
 namespace AdventOfCode2023;
+
+public static class HandyExtensions
+{
+    public static int ToInt(this char c)
+        => c - '0';
+}
 
 public class Day01Tests
 {
@@ -25,10 +27,10 @@ public class Day01Tests
         {
             var digitChars = line.Where(char.IsDigit);
 
-            var s = digitChars.First();
-            var e = digitChars.Last();
+            var d1 = digitChars.First().ToInt();
+            var d2 = digitChars.Last().ToInt();
 
-            yield return int.Parse(s.ToString() + e.ToString());
+            yield return (10 * d1) + d2;
         }
     }
 
@@ -53,7 +55,7 @@ public class Day01Tests
                 var c = s[i];
                 if (char.IsDigit(c))
                 {
-                    yield return c;
+                    yield return c.ToInt();
                 }
                 else if (true)
                 {
