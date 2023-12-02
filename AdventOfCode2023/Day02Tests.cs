@@ -6,7 +6,7 @@ namespace AdventOfCode2023;
 
 public class Day02Tests
 {
-    private static int Day01Part1(string input)
+    private static int Day02Part1(string input)
     {
         var gameListing = GameListing.Parse(input);
 
@@ -15,7 +15,7 @@ public class Day02Tests
     }
 
     [Fact]
-    public void Day01Part1Sample()
+    public void Day02Part1Sample()
     {
         var input = """
             Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
@@ -25,17 +25,17 @@ public class Day02Tests
             Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
             """;
 
-        var result = Day01Part1(input);
+        var result = Day02Part1(input);
 
         result.Should().Be(8);
     }
 
     [Fact]
-    public void Day01Part1RealDeal()
+    public void Day02Part1RealDeal()
     {
         var input = RealDealValue;
 
-        var result = Day01Part1(input);
+        var result = Day02Part1(input);
 
         result.Should().Be(2101);
     }
