@@ -8,12 +8,13 @@ public static class HandyExtensions
 
 public class Day01Tests
 {
-    private int Day01Part1(string input)
+    private static int Day01Part1(string input)
     {
         var calibrationValues = ParseCalibrationValues(input);
         return calibrationValues.Sum();
     }
-    private int Day01Part2(string input)
+
+    private static int Day01Part2(string input)
     {
         var calibrationValues = ParseCalibrationValuesWithImprovedParsing(input);
         return calibrationValues.Sum();
@@ -57,14 +58,48 @@ public class Day01Tests
                 {
                     yield return c.ToInt();
                 }
-                else if (true)
+                else if (TryParseSpelledDigit(s[i..], out var d))
                 {
-
-
+                    yield return d;
                 }
 
             }
         }
+    }
+
+    private static bool TryParseSpelledDigit(string s, out int digit)
+    {
+        var digitsSpelledOut = new[]
+        {
+            "zero",
+            "one",
+            "two",
+            "three",
+            "four",
+            "five",
+            "six",
+            "seven",
+            "eight",
+            "nine",
+        };
+
+        for (var i = 0; i < digitsSpelledOut.Length; i++)
+        {
+            var word = digitsSpelledOut[i];
+            if (word.Length > s.Length)
+            {
+                continue;
+            }
+
+            if (word == s[..word.Length])
+            {
+                digit = i;
+                return true;
+            }
+        }
+
+        digit = default;
+        return false;
     }
 
     [Fact]
