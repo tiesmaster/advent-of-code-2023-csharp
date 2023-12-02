@@ -1,30 +1,55 @@
-using FluentAssertions;
-
 namespace AdventOfCode2023;
 
 public class Day01Tests
 {
-    private int Day01(string input)
+    private int Day01Part1(string input)
     {
         var calibrationValues = ParseCalibrationValues(input);
         return calibrationValues.Sum();
     }
+    private int Day01Part2(string input)
+    {
+        var calibrationValues = ParseCalibrationValuesWithImprovedParsing(input);
+        return calibrationValues.Sum();
+    }
 
-    private IEnumerable<int> ParseCalibrationValues(string input)
+    private static IEnumerable<int> ParseCalibrationValues(string input)
     {
         var lines = input.Split(Environment.NewLine);
 
         foreach (var line in lines)
         {
             var digitChars = line.Where(char.IsDigit);
+
             var s = digitChars.First();
             var e = digitChars.Last();
+
             yield return int.Parse(s.ToString() + e.ToString());
         }
     }
 
+    private static IEnumerable<int> ParseCalibrationValuesWithImprovedParsing(string input)
+    {
+        throw new NotImplementedException();
+        var lines = input.Split(Environment.NewLine);
+
+        foreach (var line in lines)
+        {
+            for (var i = 0; i < line.Length; i++)
+            {
+
+                
+            }
+
+            //var s = digitChars.First();
+            //var e = digitChars.Last();
+
+            //yield return int.Parse(s.ToString() + e.ToString());
+        }
+    }
+
     [Fact]
-    public void SampleValues()
+    public void Part1Test()
     {
         var input = """
             1abc2
@@ -33,19 +58,65 @@ public class Day01Tests
             treb7uchet
             """;
 
-        var result = Day01(input);
+        var result = Day01Part1(input);
 
         result.Should().Be(142);
     }
 
     [Fact]
-    public void RealDeal()
+    public void Part1()
     {
         var input = RealDealValue;
 
-        var result = Day01(input);
+        var result = Day01Part1(input);
 
         result.Should().Be(56397);
+    }
+
+    [Fact]
+    public void Part2Test()
+    {
+        var input = """
+            two1nine
+            eightwothree
+            abcone2threexyz
+            xtwone3four
+            4nineeightseven2
+            zoneight234
+            7pqrstsixteen
+            """;
+
+        var result = Day01Part2(input);
+
+        result.Should().Be(281);
+    }
+
+    [Fact]
+    public void Part2TestParsedValues()
+    {
+        var input = """
+            two1nine
+            eightwothree
+            abcone2threexyz
+            xtwone3four
+            4nineeightseven2
+            zoneight234
+            7pqrstsixteen
+            """;
+
+        var result = ParseCalibrationValuesWithImprovedParsing(input);
+
+        result.Should().BeEquivalentTo([1, 2]);
+    }
+
+    [Fact]
+    public void Part2()
+    {
+        var input = RealDealValue;
+
+        var result = Day01Part2(input);
+
+        result.Should().Be(666);
     }
 
     private static string RealDealValue => """
