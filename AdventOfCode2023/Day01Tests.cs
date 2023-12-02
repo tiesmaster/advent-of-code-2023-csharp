@@ -185,7 +185,7 @@ public class Day01Tests
 
         var result = Day01Part2(input);
 
-        result.Should().Be(666);
+        result.Should().Be(55701);
     }
 
     private static string RealDealValue => """
