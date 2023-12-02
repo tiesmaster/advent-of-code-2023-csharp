@@ -16,9 +16,17 @@ public record GameListing(ImmutableList<Game> Games)
 
 public record Game(int Id, ImmutableList<GamePlay> Set)
 {
-    internal bool IsPossible(Cubes givenCubes)
+    public bool IsPossible(Cubes givenCubes)
     {
         return Set.All(p => p.IsPossible(givenCubes));
+    }
+
+    public Cubes CalculateMinimumCubesRequiredToPlay()
+    {
+        return new Cubes(
+            Set.Max(g => g.PlayedCubes.R),
+            Set.Max(g => g.PlayedCubes.G),
+            Set.Max(g => g.PlayedCubes.B));
     }
 }
 
@@ -30,7 +38,10 @@ public record GamePlay(Cubes PlayedCubes)
     }
 }
 
-public record Cubes(int R, int G, int B);
+public record Cubes(int R, int G, int B)
+{
+    public int Power => R * G * B;
+}
 
 public class GameListingParser(string input)
 {

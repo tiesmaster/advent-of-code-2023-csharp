@@ -14,6 +14,17 @@ public class Day02Tests
         return games.Sum(x => x.Id);
     }
 
+    private static int Day02Part2(string input)
+    {
+        var gameListing = GameListing.Parse(input);
+
+        return gameListing
+            .Games
+            .Select(g => g.CalculateMinimumCubesRequiredToPlay())
+            .Select(cube => cube.Power)
+            .Sum();
+    }
+
     [Fact]
     public void Day02Part1Sample()
     {
@@ -56,6 +67,32 @@ public class Day02Tests
         var text = "3 blue";
         var i = int.Parse(text[..text.IndexOf(' ')]);
         i.Should().Be(3);
+    }
+
+    [Fact]
+    public void Day02Part2Sample()
+    {
+        var input = """
+            Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
+            Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
+            Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
+            Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+            Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
+            """;
+
+        var result = Day02Part2(input);
+
+        result.Should().Be(2286);
+    }
+
+    [Fact]
+    public void Day02Part2RealDeal()
+    {
+        var input = RealDealValue;
+
+        var result = Day02Part2(input);
+
+        result.Should().Be(666);
     }
 
     private static string RealDealValue => """
