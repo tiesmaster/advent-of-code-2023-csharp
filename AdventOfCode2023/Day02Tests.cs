@@ -92,7 +92,7 @@ public class Day02Tests
 
         var result = Day02Part2(input);
 
-        result.Should().Be(666);
+        result.Should().Be(58269);
     }
 
     private static string RealDealValue => """
