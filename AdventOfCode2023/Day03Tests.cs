@@ -107,7 +107,7 @@ public class Day03Tests
         {
             get
             {
-                for (var i = 0; i <= Length; i++)
+                for (var i = 0; i < Length; i++)
                 {
                     yield return Start with { X = Start.X + i };
                 }
@@ -156,7 +156,7 @@ public class Day03Tests
 
         var result = Day03Part1(input);
 
-        result.Should().Be(538120); // too high... 538120
+        result.Should().Be(532331);
     }
 
     [Fact]
@@ -166,7 +166,17 @@ public class Day03Tests
 
         var points = line.Points;
 
-        points.Should().Contain([new(0, 1), new(1, 1)]);
+        points.Should().BeEquivalentTo<Point>([new(0, 1), new(1, 1)]);
+    }
+
+    [Fact]
+    public void GivenLineOfLength3_WhenAskingForPoints_ThenReturnsFirstAndLastPoint()
+    {
+        var line = new Line(new(0, 1), 3);
+
+        var points = line.Points;
+
+        points.Should().BeEquivalentTo<Point>([new(0, 1), new(1, 1), new(2, 1)]);
     }
 
     [Theory]
