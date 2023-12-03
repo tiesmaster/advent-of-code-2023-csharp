@@ -1,3 +1,4 @@
+using System.Text;
 
 namespace AdventOfCode2023;
 
@@ -10,6 +11,7 @@ public class Day03Tests
 
         return partNumbers.Sum(x => x.N);
     }
+
     private int Day03Part2(string input)
     {
         var engine = ParseEngine(input);
@@ -22,6 +24,89 @@ public class Day03Tests
     }
 
     private Engine ParseEngine(string input)
+    {
+        var numbers = new List<Number>();
+        var symbols = new List<Point>();
+        var possibleGears = new List<Point>();
+
+        var lines = input.Split(Environment.NewLine);
+
+        var x = 0;
+        var y = 0;
+
+        var isParsingDigit = false;
+        var startDigit = 0;
+        var digitBuilder = new StringBuilder();
+
+        foreach (var line in lines)
+        {
+            foreach (var c in line)
+            {
+                x++;
+
+                if (isParsingDigit && char.IsDigit(c))
+                {
+                    digitBuilder.Append(c);
+
+                    continue;
+                }
+
+                if (!isParsingDigit && char.IsDigit(c))
+                {
+                    // start parsing digit
+                    isParsingDigit = true;
+                    startDigit = x;
+
+                    digitBuilder.Append(c);
+
+                    continue;
+                }
+
+                if (isParsingDigit && !char.IsDigit(c))
+                {
+                    // handle digit
+                    var n = int.Parse(digitBuilder.ToString());
+                    var digitLength = digitBuilder.Length;
+                    numbers.Add(new(n, new(new(startDigit, y), digitLength)));
+
+                    digitBuilder.Clear();
+                    isParsingDigit = false;
+                }
+
+                if (c == '.')
+                {
+                    // no-op
+                    continue;
+                }
+
+                if (c == '*')
+                {
+                    possibleGears.Add(new(x, y));
+                }
+
+                // must be a symbol
+                symbols.Add(new(x, y));
+            }
+
+            if (isParsingDigit)
+            {
+                // handle digit
+                var n = int.Parse(digitBuilder.ToString());
+                var digitLength = digitBuilder.Length;
+                numbers.Add(new(n, new(new(startDigit, y), digitLength)));
+
+                digitBuilder.Clear();
+                isParsingDigit = false;
+            }
+
+            x = 0;
+            y++;
+        }
+
+        return new(numbers, symbols, possibleGears);
+    }
+
+    private Engine ParseEngineOld(string input)
     {
         var numbers = new List<Number>();
         var symbols = new List<Point>();
