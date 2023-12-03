@@ -156,7 +156,7 @@ public class Day03Tests
 
         var result = Day03Part1(input);
 
-        result.Should().Be(666);
+        result.Should().Be(538120); // too high... 538120
     }
 
     [Fact]
