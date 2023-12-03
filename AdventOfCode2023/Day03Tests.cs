@@ -21,10 +21,10 @@ public class Day03Tests
         var x = 0;
         var y = 0;
 
-        for (var i = 0; i < input.Length; i++)
+        for (var i = 0; i < input.Length; i++, x++)
         {
             var c = input[i];
-            x++;
+            //x++;
 
             if (!isParsingDigit && char.IsDigit(c))
             {
@@ -61,7 +61,7 @@ public class Day03Tests
 
             if (c == '\r')
             {
-                x = 0;
+                x = -1;
                 y++;
 
                 // skip \n
