@@ -137,6 +137,16 @@ public class Day03Tests
     }
 
     [Fact]
+    public void Day03Part1RealDeal()
+    {
+        var input = RealDealValue;
+
+        var result = Day03Part1(input);
+
+        result.Should().Be(532331);
+    }
+
+    [Fact]
     public void ValidateInput()
     {
         var chars = RealDealValue.Distinct().Order();
@@ -147,16 +157,6 @@ public class Day03Tests
 
         var hoi = chars.Select(c => (int)c).ToArray();
         Console.WriteLine();
-    }
-
-    [Fact]
-    public void Day03Part1RealDeal()
-    {
-        var input = RealDealValue;
-
-        var result = Day03Part1(input);
-
-        result.Should().Be(532331);
     }
 
     [Fact]
