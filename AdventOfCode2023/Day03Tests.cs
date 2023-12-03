@@ -1,11 +1,118 @@
-
 namespace AdventOfCode2023;
 
 public class Day03Tests
 {
     private int Day03Part1(string input)
     {
-        throw new NotImplementedException();
+        var engine = ParseEngine(input);
+        var partNumbers = engine.Numbers.Where(num => num.IsPartNumber(engine.Symbols));
+
+        return partNumbers.Sum(x => x.N);
+    }
+
+    private Engine ParseEngine(string input)
+    {
+        var numbers = new List<Number>();
+        var symbols = new List<Point>();
+
+        var isParsingDigit = false;
+        var startDigit = 0;
+
+        var x = 0;
+        var y = 0;
+
+        for (var i = 0; i < input.Length; i++)
+        {
+            var c = input[i];
+            x++;
+
+            if (!isParsingDigit && char.IsDigit(c))
+            {
+                // start parsing digit
+                startDigit = i;
+                isParsingDigit = true;
+
+                continue;
+            }
+
+            if (isParsingDigit && char.IsDigit(c))
+            {
+                // keep parsing
+
+                continue;
+            }
+
+            if (isParsingDigit && !char.IsDigit(c))
+            {
+                // handle digit
+                var n = int.Parse(input[startDigit..i]);
+                var digitLength = i - startDigit;
+                numbers.Add(new(n, new(new(x - digitLength, y), digitLength)));
+
+                isParsingDigit = false;
+            }
+
+            if (c == '.')
+            {
+                // no-op
+
+                continue;
+            }
+
+            if (c == '\r')
+            {
+                x = 0;
+                y++;
+
+                // skip \n
+                i++;
+
+                continue;
+            }
+
+            // must be a symbol
+            symbols.Add(new(x, y));
+        }
+
+        return new(numbers, symbols);
+    }
+
+    private record Engine(List<Number> Numbers, List<Point> Symbols);
+
+    private record Number(int N, Line Location)
+    {
+        public bool IsPartNumber(List<Point> symbols)
+        {
+            return Location.Points.Any(p => p.IsAdjacent(symbols));
+        }
+    }
+
+    private record Point(int X, int Y)
+    {
+        public bool IsAdjacent(List<Point> symbols)
+        {
+            return symbols.Any(p => IsAdjacent(p));
+        }
+
+        public bool IsAdjacent(Point other)
+        {
+            return X - 1 <= other.X && other.X <= X + 1
+                && Y - 1 <= other.Y && other.Y <= Y + 1;
+        }
+    }
+
+    private record Line(Point Start, int Length)
+    {
+        public IEnumerable<Point> Points
+        {
+            get
+            {
+                for (var i = 0; i <= Length; i++)
+                {
+                    yield return Start with { X = Start.X + i };
+                }
+            }
+        }
     }
 
     [Fact]
@@ -30,13 +137,78 @@ public class Day03Tests
     }
 
     [Fact]
+    public void ValidateInput()
+    {
+        var chars = RealDealValue.Distinct().Order();
+
+        var c = 'a';
+
+        var i = (int)c;
+
+        var hoi = chars.Select(c => (int)c).ToArray();
+        Console.WriteLine();
+    }
+
+    [Fact]
     public void Day03Part1RealDeal()
     {
         var input = RealDealValue;
 
         var result = Day03Part1(input);
 
-        result.Should().Be(2101);
+        result.Should().Be(666);
+    }
+
+    [Fact]
+    public void GivenLineOfLength2_WhenAskingForPoints_ThenReturnsFirstAndLastPoint()
+    {
+        var line = new Line(new(0, 1), 2);
+
+        var points = line.Points;
+
+        points.Should().Contain([new(0, 1), new(1, 1)]);
+    }
+
+    [Theory]
+    [InlineData(0, 0)]
+    [InlineData(1, 0)]
+    [InlineData(2, 0)]
+    [InlineData(0, 1)]
+    [InlineData(2, 1)]
+    [InlineData(0, 2)]
+    [InlineData(1, 2)]
+    [InlineData(2, 2)]
+    public void GivenAdjacentPoints_WhenAskingAdjacency_ThenReturnsTrue(int x, int y)
+    {
+        var thisPoint = new Point(1, 1);
+        var other = new Point(x, y);
+
+        thisPoint.IsAdjacent(other).Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(0, 0)]
+    [InlineData(1, 0)]
+    [InlineData(2, 0)]
+    [InlineData(3, 0)]
+    [InlineData(4, 0)]
+    [InlineData(0, 1)]
+    [InlineData(0, 2)]
+    [InlineData(0, 3)]
+    [InlineData(4, 1)]
+    [InlineData(4, 2)]
+    [InlineData(4, 3)]
+    [InlineData(0, 4)]
+    [InlineData(1, 4)]
+    [InlineData(2, 4)]
+    [InlineData(3, 4)]
+    [InlineData(4, 4)]
+    public void GivenNonAdjacentPoints_WhenAskingAdjacency_ThenReturnsFalse(int x, int y)
+    {
+        var thisPoint = new Point(2, 2);
+        var other = new Point(x, y);
+
+        thisPoint.IsAdjacent(other).Should().BeFalse();
     }
 
     private static string RealDealValue => """
