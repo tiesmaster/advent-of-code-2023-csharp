@@ -1,3 +1,4 @@
+
 namespace AdventOfCode2023;
 
 public class Day03Tests
@@ -9,11 +10,22 @@ public class Day03Tests
 
         return partNumbers.Sum(x => x.N);
     }
+    private int Day03Part2(string input)
+    {
+        var engine = ParseEngine(input);
+        var gearsRatios = engine
+            .PossibleGears
+            .Where(pg => engine.Numbers.Count(n => n.Location.IsAdjacent(pg)) > 1)
+            .Select(pg => engine.Numbers.Where(n => n.Location.IsAdjacent(pg)));
+
+        return gearsRatios.Sum(gr => gr.Aggregate(1, (product, num) => product * num.N));
+    }
 
     private Engine ParseEngine(string input)
     {
         var numbers = new List<Number>();
         var symbols = new List<Point>();
+        var possibleGears = new List<Point>();
 
         var isParsingDigit = false;
         var startDigit = 0;
@@ -59,6 +71,11 @@ public class Day03Tests
                 continue;
             }
 
+            if (c == '*')
+            {
+                possibleGears.Add(new(x, y));
+            }
+
             if (c == '\r')
             {
                 x = -1;
@@ -74,10 +91,10 @@ public class Day03Tests
             symbols.Add(new(x, y));
         }
 
-        return new(numbers, symbols);
+        return new(numbers, symbols, possibleGears);
     }
 
-    private record Engine(List<Number> Numbers, List<Point> Symbols);
+    private record Engine(List<Number> Numbers, List<Point> Symbols, List<Point> PossibleGears);
 
     private record Number(int N, Line Location)
     {
@@ -113,6 +130,9 @@ public class Day03Tests
                 }
             }
         }
+
+        public bool IsAdjacent(Point point)
+            => Points.Any(p => p.IsAdjacent(point));
     }
 
     [Fact]
@@ -144,6 +164,37 @@ public class Day03Tests
         var result = Day03Part1(input);
 
         result.Should().Be(532331);
+    }
+
+    [Fact]
+    public void Day03Part2Sample()
+    {
+        var input = """
+            467..114..
+            ...*......
+            ..35..633.
+            ......#...
+            617*......
+            .....+.58.
+            ..592.....
+            ......755.
+            ...$.*....
+            .664.598..
+            """;
+
+        var result = Day03Part2(input);
+
+        result.Should().Be(467835);
+    }
+
+    [Fact]
+    public void Day03Part2RealDeal()
+    {
+        var input = RealDealValue;
+
+        var result = Day03Part2(input);
+
+        result.Should().Be(82301120);
     }
 
     [Fact]
