@@ -48,11 +48,6 @@ public class Day04Tests
                 // 5 -> 16
 
                 var count = OwnWinningNumbers.Count();
-                if (count == 0)
-                {
-                    return 0;
-                }
-
                 return (int)Math.Pow(2, count - 1);
             }
         }
