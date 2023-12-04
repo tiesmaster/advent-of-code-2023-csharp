@@ -4,7 +4,58 @@ public class Day04Tests
 {
     private int Day04Part1(string input)
     {
-        throw new NotImplementedException();
+        var cards = ParseCards(input);
+        return cards.Sum(c => c.Score);
+    }
+
+    private IEnumerable<Card> ParseCards(string input)
+    {
+        var lines = input.Split(Environment.NewLine);
+        foreach (var line in lines)
+        {
+            yield return ParseCard(line);
+        }
+    }
+
+    private Card ParseCard(string line)
+    {
+        var numbers = line[(line.IndexOf(':') + 1)..];
+        var parts = numbers.Split('|');
+        return new(ParseNumbers(parts[0]), ParseNumbers(parts[1]));
+    }
+
+    private HashSet<int> ParseNumbers(string s)
+    {
+        return s
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Select(int.Parse)
+            .ToHashSet();
+    }
+
+    private record Card(HashSet<int> WinningNumbers, HashSet<int> OwnNumbers)
+    {
+        public IEnumerable<int> OwnWinningNumbers => WinningNumbers.Intersect(OwnNumbers);
+
+        public int Score
+        {
+            get
+            {
+                // 0 -> 0
+                // 1 -> 1
+                // 2 -> 2
+                // 3 -> 4
+                // 4 -> 8
+                // 5 -> 16
+
+                var count = OwnWinningNumbers.Count();
+                if (count == 0)
+                {
+                    return 0;
+                }
+
+                return (int)Math.Pow(2, count - 1);
+            }
+        }
     }
 
     private int Day04Part2(string input)
