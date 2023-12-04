@@ -17,14 +17,26 @@ public class Day04Tests
         }
     }
 
-    private Card ParseCard(string line)
+    private static Card ParseCard(string line)
     {
-        var numbers = line[(line.IndexOf(':') + 1)..];
-        var parts = numbers.Split('|');
-        return new(ParseNumbers(parts[0]), ParseNumbers(parts[1]));
+        var parts = line.Split(":");
+        var cardNumber = ParseCardNumber(parts[0]);
+        var (winningNumbers, ownNumbers) = ParseNumberListing(parts[1]);
+        return new(cardNumber, winningNumbers, ownNumbers);
     }
 
-    private HashSet<int> ParseNumbers(string s)
+    private static int ParseCardNumber(string s)
+    {
+        return int.Parse(s[4..]);
+    }
+
+    private static (HashSet<int>, HashSet<int>) ParseNumberListing(string s)
+    {
+        var parts = s.Split('|');
+        return (ParseNumbers(parts[0]), ParseNumbers(parts[1]));
+    }
+
+    private static HashSet<int> ParseNumbers(string s)
     {
         return s
             .Split(' ', StringSplitOptions.RemoveEmptyEntries)
@@ -32,7 +44,7 @@ public class Day04Tests
             .ToHashSet();
     }
 
-    private record Card(HashSet<int> WinningNumbers, HashSet<int> OwnNumbers)
+    private record Card(int CardNumber, HashSet<int> WinningNumbers, HashSet<int> OwnNumbers)
     {
         public IEnumerable<int> OwnWinningNumbers => WinningNumbers.Intersect(OwnNumbers);
 
