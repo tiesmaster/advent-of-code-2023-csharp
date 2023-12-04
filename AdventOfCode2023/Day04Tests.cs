@@ -170,14 +170,14 @@ public class Day04Tests
         result.Should().Be(30);
     }
 
-    [Fact(Skip = "Still at part 2")]
+    [Fact]
     public void Day04Part2RealDeal()
     {
         var input = RealDealValue;
 
         var result = Day04Part2(input);
 
-        result.Should().Be(666);
+        result.Should().Be(9924412);
     }
 
     private static string RealDealValue => """
