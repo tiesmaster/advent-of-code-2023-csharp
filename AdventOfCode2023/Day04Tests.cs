@@ -8,7 +8,68 @@ public class Day04Tests
         return cards.Sum(c => c.Score);
     }
 
-    private IEnumerable<Card> ParseCards(string input)
+    private int Day04Part2(string input)
+    {
+        var cards = ParseCards(input).ToArray();
+
+        var N = cards.Length;
+        var cardCount = new int[N];
+
+        for (var i = 0; i < N; i++)
+        {
+            var count = ++cardCount[i];
+            var countMatches = cards[i].OwnWinningNumbers.Count();
+
+            for (var j = i + 1; j < N && j < i + countMatches + 1; j++)
+            {
+                cardCount[j] += count;
+            }
+        }
+
+        return cardCount.Sum();
+    }
+
+    private int Day04Part2_Broken(string input)
+    {
+        var cards = ParseCards(input).ToArray();
+
+        var N = cards.Length + 1;
+        var cardCount = new int[N];
+
+        foreach (var card in cards)
+        {
+            var i = card.CardNumber;
+            var countMatches = card.OwnWinningNumbers.Count();
+            if (true)
+            {
+                var count = ++cardCount[i];
+                for (var j = i + 1; j <= countMatches + 1 && j <= N + 1; j++)
+                {
+                    cardCount[j] += count;
+                }
+            }
+        }
+
+        return cardCount.Sum();
+    }
+
+    void Hoi()
+    {
+        var N = 10;
+        for (var i = 0; i < N; i++)
+        {
+
+        }
+
+        var j = 0;
+        while (j < N)
+        {
+
+            j++;
+        }
+    }
+
+    private static IEnumerable<Card> ParseCards(string input)
     {
         var lines = input.Split(Environment.NewLine);
         foreach (var line in lines)
@@ -65,11 +126,6 @@ public class Day04Tests
         }
     }
 
-    private int Day04Part2(string input)
-    {
-        throw new NotImplementedException();
-    }
-
     [Fact]
     public void Day04Part1Sample()
     {
@@ -97,7 +153,7 @@ public class Day04Tests
         result.Should().Be(25010);
     }
 
-    [Fact(Skip = "Still at part 2")]
+    [Fact]
     public void Day04Part2Sample()
     {
         var input = """
@@ -111,7 +167,7 @@ public class Day04Tests
 
         var result = Day04Part2(input);
 
-        result.Should().Be(66);
+        result.Should().Be(30);
     }
 
     [Fact(Skip = "Still at part 2")]
