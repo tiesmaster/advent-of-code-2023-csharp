@@ -87,7 +87,7 @@ public class Day04Tests
 
         var result = Day04Part1(input);
 
-        result.Should().Be(666);
+        result.Should().Be(25010);
     }
 
     [Fact(Skip = "Still at part 2")]
