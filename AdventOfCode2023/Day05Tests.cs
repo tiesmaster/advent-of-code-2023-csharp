@@ -4,13 +4,58 @@ public class Day05Tests
 {
     private int Day05Part1(string input)
     {
+        var almanac = ParseAlmanac(input);
         throw new NotImplementedException();
+    }
+
+    private Almanac ParseAlmanac(string input)
+    {
+        var blocks = input.Split(Environment.NewLine + Environment.NewLine);
+        var seeds = ParseSeeds(blocks[0]);
+        var mappings = ParseMappings(blocks[1..]);
+        return new(seeds, mappings);
+    }
+
+    private HashSet<long> ParseSeeds(string line)
+    {
+        return line[7..]
+            .Split(' ')
+            .Select(long.Parse)
+            .ToHashSet();
+    }
+
+    private List<Mapping> ParseMappings(IEnumerable<string> s)
+    {
+        return s.Select(ParseMapping).ToList();
+    }
+
+    private Mapping ParseMapping(string s)
+    {
+        var lines = s.Split(Environment.NewLine);
+        var maps = lines[1..].Select(ParseMap).ToList();
+        return new (maps);
+    }
+
+    private Map ParseMap(string s)
+    {
+        var parts = s.Split(' ').Select(long.Parse).ToArray();
+        var start = parts[1];
+        var offset = parts[0] - parts[1];
+        var length = parts[2];
+
+        return new(start, offset, length);
     }
 
     private int Day05Part2(string input)
     {
         throw new NotImplementedException();
     }
+
+    private record Almanac(HashSet<long> SeedsToBePlanted, List<Mapping> Mappings);
+
+    private record Mapping(List<Map> Maps);
+
+    private record Map(long Start, long Offset, long Length);
 
     [Fact]
     public void Day05Part1Sample()
@@ -70,12 +115,39 @@ public class Day05Tests
     public void Day05Part2Sample()
     {
         var input = """
-            Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
-            Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
-            Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
-            Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
-            Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
-            Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
+            seeds: 79 14 55 13
+            
+            seed-to-soil map:
+            50 98 2
+            52 50 48
+            
+            soil-to-fertilizer map:
+            0 15 37
+            37 52 2
+            39 0 15
+            
+            fertilizer-to-water map:
+            49 53 8
+            0 11 42
+            42 0 7
+            57 7 4
+            
+            water-to-light map:
+            88 18 7
+            18 25 70
+            
+            light-to-temperature map:
+            45 77 23
+            81 45 19
+            68 64 13
+            
+            temperature-to-humidity map:
+            0 69 1
+            1 0 69
+            
+            humidity-to-location map:
+            60 56 37
+            56 93 4
             """;
 
         var result = Day05Part2(input);
