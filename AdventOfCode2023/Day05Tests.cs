@@ -5,7 +5,6 @@ public class Day05Tests
     private long Day05Part1(string input)
     {
         var almanac = ParseAlmanac(input);
-
         return almanac.SeedsToBePlanted.Min(seed => almanac.Map(seed));
 
         //foreach (var mapping in almanac.Mappings)
@@ -102,7 +101,7 @@ public class Day05Tests
 
     private record Segment(long Start, long Offset, long Length)
     {
-        public bool CanMap(long start) => Start <= start && start < Start + Offset;
+        public bool CanMap(long start) => Start <= start && start < Start + Length;
 
         internal long Map(long start) => start + Offset;
     }
@@ -149,6 +148,54 @@ public class Day05Tests
         var result = Day05Part1(input);
 
         result.Should().Be(35);
+    }
+
+    [Fact]
+    public void ValidateIntermediateMappings()
+    {
+        var input = """
+            seeds: 79 14 55 13
+
+            seed-to-soil map:
+            50 98 2
+            52 50 48
+
+            soil-to-fertilizer map:
+            0 15 37
+            37 52 2
+            39 0 15
+
+            fertilizer-to-water map:
+            49 53 8
+            0 11 42
+            42 0 7
+            57 7 4
+
+            water-to-light map:
+            88 18 7
+            18 25 70
+
+            light-to-temperature map:
+            45 77 23
+            81 45 19
+            68 64 13
+
+            temperature-to-humidity map:
+            0 69 1
+            1 0 69
+
+            humidity-to-location map:
+            60 56 37
+            56 93 4
+            """;
+
+        var almanac = ParseAlmanac(input);
+
+        var m1 = almanac.Mappings.First();
+
+        var seed = 79L;
+        var soil = m1.Map(seed);
+        soil.Should().Be(81);
     }
 
     [Fact]
