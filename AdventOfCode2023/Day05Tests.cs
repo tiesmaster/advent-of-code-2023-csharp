@@ -19,8 +19,17 @@ public class Day05Tests
     {
         var blocks = input.Split(Environment.NewLine + Environment.NewLine);
         var seeds = ParseSeeds(blocks[0]);
+        var seedRange = ToSeedRange([.. seeds]).ToList();
         var mappings = ParseMappings(blocks[1..]);
-        return new(seeds, default, mappings);
+        return new(seeds, seedRange, mappings);
+    }
+
+    private static IEnumerable<SegmentRange> ToSeedRange(long[] seeds)
+    {
+        for (var i = 0; i < seeds.Length; i += 2)
+        {
+            yield return new SegmentRange(seeds[i], seeds[i + 1]);
+        }
     }
 
     private static HashSet<long> ParseSeeds(string line)
