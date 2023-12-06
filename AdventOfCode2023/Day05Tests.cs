@@ -2,10 +2,18 @@ namespace AdventOfCode2023;
 
 public class Day05Tests
 {
-    private int Day05Part1(string input)
+    private long Day05Part1(string input)
     {
         var almanac = ParseAlmanac(input);
-        throw new NotImplementedException();
+
+        return almanac.SeedsToBePlanted.Min(seed => almanac.Map(seed));
+
+        //foreach (var mapping in almanac.Mappings)
+        //{
+        //    mapping.NoOverlap();
+        //}
+        //return 0;
+        //throw new NotImplementedException();
     }
 
     private Almanac ParseAlmanac(string input)
@@ -16,7 +24,7 @@ public class Day05Tests
         return new(seeds, mappings);
     }
 
-    private HashSet<long> ParseSeeds(string line)
+    private static HashSet<long> ParseSeeds(string line)
     {
         return line[7..]
             .Split(' ')
@@ -32,11 +40,16 @@ public class Day05Tests
     private Mapping ParseMapping(string s)
     {
         var lines = s.Split(Environment.NewLine);
-        var maps = lines[1..].Select(ParseMap).ToList();
+
+        var maps = lines[1..]
+            .Select(ParseSegement)
+            .OrderBy(s => s.Start)
+            .ToList();
+
         return new (maps);
     }
 
-    private Map ParseMap(string s)
+    private Segment ParseSegement(string s)
     {
         var parts = s.Split(' ').Select(long.Parse).ToArray();
         var start = parts[1];
@@ -51,11 +64,48 @@ public class Day05Tests
         throw new NotImplementedException();
     }
 
-    private record Almanac(HashSet<long> SeedsToBePlanted, List<Mapping> Mappings);
+    private record Almanac(HashSet<long> SeedsToBePlanted, List<Mapping> Mappings)
+    {
+        public long Map(long start)
+        {
+            var mapped = start;
+            foreach (var mapping in Mappings)
+            {
+                mapped = mapping.Map(mapped);
+            }
 
-    private record Mapping(List<Map> Maps);
+            return mapped;
+        }
+    }
 
-    private record Map(long Start, long Offset, long Length);
+    private record Mapping(List<Segment> Segments)
+    {
+        //internal void NoOverlap()
+        //{
+        //    var segs = Segments.OrderBy(s => s.Start).ToArray();
+
+        //    for (var i = 0; i < segs.Length; i++)
+        //    {
+        //        var s0 = segs[0];
+        //        var s1 = segs[1];
+
+        //        (s0.Start + s0.Length).Should().BeLessThanOrEqualTo(s1.Start);
+        //    }
+        //    //throw new NotImplementedException();
+        //}
+
+        public long Map(long start)
+        {
+            return Segments.FirstOrDefault(seg => seg.CanMap(start))?.Map(start) ?? start;
+        }
+    }
+
+    private record Segment(long Start, long Offset, long Length)
+    {
+        public bool CanMap(long start) => Start <= start && start < Start + Offset;
+
+        internal long Map(long start) => start + Offset;
+    }
 
     [Fact]
     public void Day05Part1Sample()
