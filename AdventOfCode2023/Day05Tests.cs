@@ -147,7 +147,7 @@ public class Day05Tests
 
         var result = Day05Part1(input);
 
-        result.Should().Be(35);
+        result.Should().Be(35L);
     }
 
     [Fact]
@@ -195,7 +195,7 @@ public class Day05Tests
 
         var seed = 79L;
         var soil = m1.Map(seed);
-        soil.Should().Be(81);
+        soil.Should().Be(81L);
     }
 
     [Fact]
@@ -205,7 +205,7 @@ public class Day05Tests
 
         var result = Day05Part1(input);
 
-        result.Should().Be(666);
+        result.Should().Be(535088217L);
     }
 
     [Fact(Skip = "Still at part 1")]
