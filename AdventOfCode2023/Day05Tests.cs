@@ -20,7 +20,7 @@ public class Day05Tests
         var blocks = input.Split(Environment.NewLine + Environment.NewLine);
         var seeds = ParseSeeds(blocks[0]);
         var mappings = ParseMappings(blocks[1..]);
-        return new(seeds, mappings);
+        return new(seeds, default, mappings);
     }
 
     private static HashSet<long> ParseSeeds(string line)
@@ -42,7 +42,7 @@ public class Day05Tests
 
         var maps = lines[1..]
             .Select(ParseSegement)
-            .OrderBy(s => s.Start)
+            .OrderBy(s => s.Range.Start)
             .ToList();
 
         return new (maps);
@@ -55,7 +55,7 @@ public class Day05Tests
         var offset = parts[0] - parts[1];
         var length = parts[2];
 
-        return new(start, offset, length);
+        return new(new(start, length), offset);
     }
 
     private int Day05Part2(string input)
@@ -63,11 +63,11 @@ public class Day05Tests
         throw new NotImplementedException();
     }
 
-    private record Almanac(HashSet<long> SeedsToBePlanted, List<Mapping> Mappings)
+    private record Almanac(HashSet<long> SeedsToBePlanted, List<SegmentRange> SeedRanges, List<Mapping> Mappings)
     {
-        public long Map(long start)
+        public long Map(long position)
         {
-            var mapped = start;
+            var mapped = position;
             foreach (var mapping in Mappings)
             {
                 mapped = mapping.Map(mapped);
@@ -99,11 +99,16 @@ public class Day05Tests
         }
     }
 
-    private record Segment(long Start, long Offset, long Length)
+    private record Segment(SegmentRange Range, long Offset)
     {
-        public bool CanMap(long start) => Start <= start && start < Start + Length;
+        public bool CanMap(long position) => Range.InRange(position);
 
         internal long Map(long start) => start + Offset;
+    }
+
+    private record SegmentRange(long Start, long Length)
+    {
+        public bool InRange(long start) => Start <= start && start < Start + Length;
     }
 
     [Fact]
