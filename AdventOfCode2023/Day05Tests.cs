@@ -15,6 +15,21 @@ public class Day05Tests
         //throw new NotImplementedException();
     }
 
+    private long Day05Part2(string input)
+    {
+        var almanac = ParseAlmanac(input);
+        var endPositions = new HashSet<long>();
+        foreach (var range in almanac.SeedRanges)
+        {
+            foreach (var position in range.Positions)
+            {
+                endPositions.Add(almanac.Map(position));
+            }
+        }
+
+        return endPositions.Min();
+    }
+
     private Almanac ParseAlmanac(string input)
     {
         var blocks = input.Split(Environment.NewLine + Environment.NewLine);
@@ -67,11 +82,6 @@ public class Day05Tests
         return new(new(start, length), offset);
     }
 
-    private int Day05Part2(string input)
-    {
-        throw new NotImplementedException();
-    }
-
     private record Almanac(HashSet<long> SeedsToBePlanted, List<SegmentRange> SeedRanges, List<Mapping> Mappings)
     {
         public long Map(long position)
@@ -117,6 +127,17 @@ public class Day05Tests
 
     private record SegmentRange(long Start, long Length)
     {
+        public IEnumerable<long> Positions
+        {
+            get
+            {
+                for (var pos = Start; pos < (Start + Length); pos++)
+                {
+                    yield return pos;
+                }
+            }
+        }
+
         public bool InRange(long start) => Start <= start && start < Start + Length;
     }
 
@@ -222,7 +243,7 @@ public class Day05Tests
         result.Should().Be(535088217L);
     }
 
-    [Fact(Skip = "Still at part 1")]
+    [Fact]
     public void Day05Part2Sample()
     {
         var input = """
@@ -263,7 +284,7 @@ public class Day05Tests
 
         var result = Day05Part2(input);
 
-        result.Should().Be(30);
+        result.Should().Be(46L);
     }
 
     [Fact(Skip = "Still at part 1")]
@@ -273,7 +294,7 @@ public class Day05Tests
 
         var result = Day05Part2(input);
 
-        result.Should().Be(9924412);
+        result.Should().Be(666L);
     }
 
     private static string RealDealValue => """
